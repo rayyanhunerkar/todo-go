@@ -10,7 +10,7 @@ import (
 
 var DB *gorm.DB
 
-func InitDatabase(conf *viper.Viper) (*gorm.DB, error) {
+func InitDatabase(conf *viper.Viper) *gorm.DB {
 
 	dbName := conf.GetString("database.name")
 	dbUser := conf.GetString("database.user")
@@ -22,8 +22,9 @@ func InitDatabase(conf *viper.Viper) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dbURL))
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 	DB = db
-	return db, nil
+	return db
+
 }

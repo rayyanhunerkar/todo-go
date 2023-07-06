@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func InitConfig() (*viper.Viper, error) {
+func InitConfig() *viper.Viper {
 	conf := viper.New()
 	conf.SetConfigName("env.yaml")
 	conf.SetConfigType("yaml")
@@ -12,7 +12,7 @@ func InitConfig() (*viper.Viper, error) {
 	conf.AutomaticEnv()
 	err := conf.ReadInConfig()
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return conf, nil
+	return conf
 }

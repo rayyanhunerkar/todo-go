@@ -4,11 +4,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/spf13/viper"
 )
-
-type Tabler interface {
-	TableName() string
-}
 
 func (User) TableName() string {
 	return "public.users"
@@ -31,6 +28,13 @@ type RegisterRequest struct {
 	Password  string `json:"password" binding:"required"`
 }
 
+type RegisterResponse struct {
+	ID        uuid.UUID `json:"id"`
+	Username  string    `json:"username"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+}
+
 type LoginRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -38,4 +42,5 @@ type LoginRequest struct {
 
 type UserRepository interface {
 	CreateUser(user RegisterRequest) (*User, error)
+	Login(request LoginRequest, conf *viper.Viper) (string, error)
 }
