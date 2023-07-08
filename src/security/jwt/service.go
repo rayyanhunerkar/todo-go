@@ -36,9 +36,6 @@ func (conf *JWTConf) GenerateToken(user models.User) (string, error) {
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(60)).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	SignedToken, _ := token.SignedString([]byte(secret))
-	print(SignedToken)
-	// print(err)
 	return token.SignedString([]byte(secret))
 }
 

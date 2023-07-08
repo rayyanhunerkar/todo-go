@@ -36,7 +36,7 @@ func RegisterStateRoutes(router *gin.Engine, stateRepo *repositories.StateRepo, 
 	routes.GET("/", h.stateController.GetStates)
 	routes.POST("/", h.stateController.CreateState)
 	routes.GET("/:id", h.stateController.GetStateByID)
-	routes.PATCH("/:id")
+	routes.PATCH("/:id", h.stateController.UpdateState)
 	routes.DELETE("/:id")
 }
 

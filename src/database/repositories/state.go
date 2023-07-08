@@ -29,13 +29,16 @@ func (repo *StateRepo) CreateState(request models.StateCreateRequest) (*models.S
 	return &s, nil
 }
 
-func (repo *StateRepo) GetStates() (*[]models.State, error) {
+func (repo *StateRepo) GetStates() (*models.Response, error) {
 	var states []models.State
+	var response models.Response
 
 	if result := repo.db.Find(&states); result.Error != nil {
 		return nil, result.Error
 	}
-	return &states, nil
+	response.Data = &states
+	response.Message = "Retrieved States successfully"
+	return &response, nil
 }
 
 func (repo *StateRepo) GetStateByID(id string) (*models.State, error) {
@@ -45,4 +48,29 @@ func (repo *StateRepo) GetStateByID(id string) (*models.State, error) {
 		return nil, result.Error
 	}
 	return &s, nil
+}
+
+func (repo *StateRepo) UpdateState(request models.StateUpdateRequest, id string) (*models.Response, error) {
+	var s models.State
+	var response models.Response
+
+	if result := repo.db.Where("id = ?", id).First(&s); result.Error != nil {
+		return nil, result.Error
+	}
+	s.Name = request.Name
+	s.Description = request.Description
+
+	repo.db.Save(&s)
+	response.Data = &s
+	response.Message = "State updated successfully"
+	return &response, nil
+}
+
+func (repo *StateRepo) DeleteState(id string) error {
+	var s models.State
+
+	if result := repo.db.Where("id = ?", id).Delete(&s); result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

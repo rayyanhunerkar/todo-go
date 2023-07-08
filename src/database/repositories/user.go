@@ -18,27 +18,38 @@ func InitUserRepo(db *gorm.DB) *UserRepo {
 	}
 }
 
-func (repo *UserRepo) CreateUser(user models.RegisterRequest) (*models.User, error) {
+func (repo *UserRepo) CreateUser(request models.RegisterRequest) (*models.Response, error) {
 
 	var err error
 	var hashedPassword []byte
 	var u models.User
+	var data models.RegisterResponse
+	var response models.Response
 
-	hashedPassword, err = utils.HashPassword(user.Password)
+	hashedPassword, err = utils.HashPassword(request.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	u.Username = user.Username
-	u.FirstName = user.FirstName
-	u.LastName = user.LastName
+	u.Username = request.Username
+	u.FirstName = request.FirstName
+	u.LastName = request.LastName
 	u.Password = string(hashedPassword)
 
 	err = repo.db.Create(&u).Error
 	if err != nil {
 		return nil, err
 	}
-	return &u, err
+
+	data.ID = u.ID
+	data.FirstName = u.FirstName
+	data.LastName = u.LastName
+	data.Username = u.Username
+
+	response.Data = data
+	response.Message = "User Created successfully"
+
+	return &response, err
 }
 
 func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (string, error) {

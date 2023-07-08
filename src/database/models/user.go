@@ -41,6 +41,6 @@ type LoginRequest struct {
 }
 
 type UserRepository interface {
-	CreateUser(user RegisterRequest) (*User, error)
+	CreateUser(user RegisterRequest) (*Response, error)
 	Login(request LoginRequest, conf *viper.Viper) (string, error)
 }

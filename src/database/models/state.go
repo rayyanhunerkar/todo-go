@@ -30,6 +30,8 @@ type StateUpdateRequest struct {
 
 type StateRepository interface {
 	CreateState(request StateCreateRequest) (*State, error)
-	GetStates() (*[]State, error)
+	GetStates() (*Response, error)
 	GetStateByID(id string) (*State, error)
+	UpdateState(request StateUpdateRequest, id string) (*Response, error)
+	DeleteState(id string) error
 }

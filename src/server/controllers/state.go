@@ -50,3 +50,26 @@ func (h *StateController) GetStateByID(context *gin.Context) {
 	}
 	context.JSON(http.StatusOK, state)
 }
+
+func (h *StateController) UpdateState(context *gin.Context) {
+	var request models.StateUpdateRequest
+	id := context.Param("id")
+	if err := context.BindJSON(&request); err != nil {
+		context.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	response, err := h.service.UpdateState(request, id)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusNotFound, "State not found")
+	}
+	context.JSON(http.StatusOK, response)
+}
+
+func (h *StateController) DeleteState(context *gin.Context) {
+	id := context.Param("id")
+	err := h.service.DeleteState(id)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusNotFound, "State not found")
+	}
+	context.JSON(http.StatusNoContent, nil)
+}
