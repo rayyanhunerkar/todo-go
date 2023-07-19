@@ -29,9 +29,9 @@ type StateUpdateRequest struct {
 }
 
 type StateRepository interface {
-	CreateState(request StateCreateRequest) (*State, error)
+	CreateState(request StateCreateRequest) (*Response, error)
 	GetStates() (*Response, error)
-	GetStateByID(id string) (*State, error)
+	GetStateByID(id string) (*Response, error)
 	UpdateState(request StateUpdateRequest, id string) (*Response, error)
 	DeleteState(id string) error
 }

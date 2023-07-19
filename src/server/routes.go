@@ -12,6 +12,7 @@ import (
 type Controllers struct {
 	userController  *controllers.UserController
 	stateController *controllers.StateController
+	cardController  *controllers.CardController
 }
 
 func RegisterAuthRoutes(router *gin.Engine, userRepo *repositories.UserRepo, conf *viper.Viper) {
@@ -33,11 +34,18 @@ func RegisterStateRoutes(router *gin.Engine, stateRepo *repositories.StateRepo, 
 	}
 	routes := router.Group("/states")
 	routes.Use(middlewares.AuthJWTMiddleware(conf))
-	routes.GET("/", h.stateController.GetStates)
-	routes.POST("/", h.stateController.CreateState)
+	routes.POST("", h.stateController.CreateState)
+	routes.GET("", h.stateController.GetStates)
 	routes.GET("/:id", h.stateController.GetStateByID)
 	routes.PATCH("/:id", h.stateController.UpdateState)
-	routes.DELETE("/:id")
+	routes.DELETE("/:id", h.stateController.DeleteState)
 }
 
-func RegisterCardRoutes(router *gin.Engine, repositories *repositories.Repositories) {}
+func RegisterCardRoutes(router *gin.Engine, cardRepo *repositories.CardRepo, conf *viper.Viper) {
+	h := &Controllers{
+		cardController: controllers.InitCardController(cardRepo),
+	}
+	routes := router.Group("/cards")
+	routes.Use(middlewares.AuthJWTMiddleware(conf))
+	routes.POST("", h.cardController.CreateCard)
+}

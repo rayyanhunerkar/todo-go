@@ -15,18 +15,22 @@ func InitStateRepo(db *gorm.DB) *StateRepo {
 	}
 }
 
-func (repo *StateRepo) CreateState(request models.StateCreateRequest) (*models.State, error) {
+func (repo *StateRepo) CreateState(request models.StateCreateRequest) (*models.Response, error) {
 	var err error
 	var s models.State
+	var response models.Response
 
 	s.Name = request.Name
 	s.Description = request.Description
 	err = repo.db.Create(&s).Error
-
 	if err != nil {
 		return nil, err
 	}
-	return &s, nil
+
+	response.Data = &s
+	response.Message = "State created successfully"
+
+	return &response, nil
 }
 
 func (repo *StateRepo) GetStates() (*models.Response, error) {
@@ -36,18 +40,21 @@ func (repo *StateRepo) GetStates() (*models.Response, error) {
 	if result := repo.db.Find(&states); result.Error != nil {
 		return nil, result.Error
 	}
+
 	response.Data = &states
 	response.Message = "Retrieved States successfully"
 	return &response, nil
 }
 
-func (repo *StateRepo) GetStateByID(id string) (*models.State, error) {
+func (repo *StateRepo) GetStateByID(id string) (*models.Response, error) {
 	var s models.State
-
+	var response models.Response
 	if result := repo.db.Where("id = ?", id).First(&s); result.Error != nil {
 		return nil, result.Error
 	}
-	return &s, nil
+	response.Data = &s
+	response.Message = "State recieved successfully"
+	return &response, nil
 }
 
 func (repo *StateRepo) UpdateState(request models.StateUpdateRequest, id string) (*models.Response, error) {

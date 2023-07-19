@@ -40,7 +40,14 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type LoginResponse struct {
+	ID          uuid.UUID `json:"id"`
+	AccessToken string    `json:"access_token"`
+	Username    string    `json:"username"`
+}
+
 type UserRepository interface {
 	CreateUser(user RegisterRequest) (*Response, error)
-	Login(request LoginRequest, conf *viper.Viper) (string, error)
+	Login(request LoginRequest, conf *viper.Viper) (*Response, error)
+	GetUserByID(id string) (*User, error)
 }

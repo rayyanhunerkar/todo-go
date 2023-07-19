@@ -16,8 +16,23 @@ type Card struct {
 	Description string    `gorm:"column:description;not null;" json:"description"`
 	Deadline    time.Time `gorm:"column:deadline;not null;" json:"deadline"`
 	State       State     `gorm:"column:state_id;foreignKey:StateRefer;" json:"state_id"`
-	UserID      User      `gorm:"column:user_id;foreignKey:UserRefer;" json:"user_id"`
+	User        User      `gorm:"column:user_id;foreignKey:UserRefer;" json:"user_id"`
 	AssignedTo  User      `gorm:"column:assigned_to;foreignKey:AssignRefer;" json:"assigned_to"`
 	CreatedAt   time.Time `gorm:"column:created_at;not null;autoCreateTime:true;" json:"created_at"`
 	UpdatedAt   time.Time `gorm:"column:updated_at;not null;autoUpdateTime:true;" json:"updated_at"`
+}
+
+type CardRequest struct {
+	Title       string    `json:"title" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Deadline    time.Time `json:"deadline" binding:"required"`
+	State       State     `json:"state_id" binding:"required"`
+	AssignedTo  User      `json:"assigned_to" binding:"-"`
+}
+
+type CardRepository interface {
+	CreateCard(request CardRequest, uid string) (*Response, error)
+	GetCards(uid string) (*Response, error)
+	GetCardByID(id string, uid string) (*Response, error)
+	DeleteCard(id string)
 }

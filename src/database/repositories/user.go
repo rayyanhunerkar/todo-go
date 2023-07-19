@@ -52,20 +52,46 @@ func (repo *UserRepo) CreateUser(request models.RegisterRequest) (*models.Respon
 	return &response, err
 }
 
-func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (string, error) {
-	var u models.User
-	jwtConf := jwt.InitJWTConf(conf)
-	if result := repo.db.Where("username = ?", request.Username).First(&u); result.Error != nil {
-		return "", result.Error
-	}
+func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (*models.Response, error) {
+	var data models.LoginResponse
+	var response models.Response
 
-	err := utils.VerifyPassword(u.Password, request.Password)
+	jwtConf := jwt.InitJWTConf(conf)
+
+	result, err := repo.GetUserByName(request.Username)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	token, err := jwt.JWTService.GenerateToken(jwtConf, u)
+	err = utils.VerifyPassword(result.Password, request.Password)
+	if err != nil {
+		return nil, err
+	}
+	token, err := jwt.JWTService.GenerateToken(jwtConf, *result)
 	if err != nil {
 		panic(err)
 	}
-	return token, nil
+
+	data.AccessToken = token
+	data.ID = result.ID
+	data.Username = result.Username
+
+	response.Data = data
+	response.Message = "User Logged in successfully"
+	return &response, nil
+}
+
+func (repo *UserRepo) GetUserByID(id string) (*models.User, error) {
+	var u models.User
+	if result := repo.db.Where("id = ?", id).First(&u); result.Error != nil {
+		return nil, result.Error
+	}
+	return &u, nil
+}
+
+func (repo *UserRepo) GetUserByName(username string) (*models.User, error) {
+	var u models.User
+	if result := repo.db.Where("username = ?", username).First(&u); result.Error != nil {
+		return nil, result.Error
+	}
+	return &u, nil
 }
