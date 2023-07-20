@@ -71,6 +71,7 @@ func (repo *StateRepo) UpdateState(request models.StateUpdateRequest, id string)
 	response.Data = &s
 	response.Message = "State updated successfully"
 	return &response, nil
+
 }
 
 func (repo *StateRepo) DeleteState(id string) error {
@@ -79,5 +80,16 @@ func (repo *StateRepo) DeleteState(id string) error {
 	if result := repo.db.Where("id = ?", id).Delete(&s); result.Error != nil {
 		return result.Error
 	}
+
 	return nil
+}
+
+func (repo *StateRepo) GetState(id string) (*models.State, error) {
+	var s models.State
+
+	if result := repo.db.Where("id = ?", id).First(&s); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &s, nil
 }

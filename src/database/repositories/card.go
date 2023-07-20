@@ -15,11 +15,17 @@ func InitCardRepo(db *gorm.DB) *CardRepo {
 	}
 }
 
-func (repo *CardRepo) CreateCard(request models.CardRequest, uid string) (*models.Response, error) {
+func (repo *CardRepo) CreateCard(request models.CardRequest, uid string, state_id string) (*models.Response, error) {
 	var card models.Card
 	var data models.Response
+	// var state models.State
 
 	user, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
+	if err != nil {
+		return nil, err
+	}
+
+	state, err := models.StateRepository.GetState(InitStateRepo(repo.db), state_id)
 	if err != nil {
 		return nil, err
 	}
@@ -28,6 +34,7 @@ func (repo *CardRepo) CreateCard(request models.CardRequest, uid string) (*model
 	card.Description = request.Description
 	card.Deadline = request.Deadline
 	card.User = *user
+	card.State = *state
 
 	data.Data = &card
 	data.Message = "Card created successfully"
@@ -36,12 +43,54 @@ func (repo *CardRepo) CreateCard(request models.CardRequest, uid string) (*model
 }
 
 func (repo *CardRepo) GetCards(uid string) (*models.Response, error) {
+	var cards []models.Card
+	var data models.Response
 
-	return nil, nil
+	user, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
+	if err != nil {
+		return nil, err
+	}
+
+	if result := repo.db.Find(&cards).Where("user_id = ?", user.ID); result.Error != nil {
+		return nil, err
+	}
+
+	data.Data = &cards
+	data.Message = "Cards fetched successfully"
+	return &data, nil
+
 }
 
 func (repo *CardRepo) GetCardByID(id string, uid string) (*models.Response, error) {
-	return nil, nil
+	var card models.Card
+	var data models.Response
+
+	user, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
+	if err != nil {
+		return nil, err
+	}
+
+	if result := repo.db.Find(&card).Where("user_id = ?", user.ID).Where("id = ?", id); result.Error != nil {
+		return nil, err
+	}
+
+	data.Data = &card
+	data.Message = "Card fetched successfully"
+	return &data, nil
+
 }
 
-func (repo *CardRepo) DeleteCard(id string) {}
+func (repo *CardRepo) DeleteCard(id string, uid string) error {
+	var card models.Card
+
+	user, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
+	if err != nil {
+		return err
+	}
+
+	if result := repo.db.Find(&card).Where("user_id = ?", user.ID).Where("id = ?", id).Delete(&card); result.Error != nil {
+		return err
+	}
+
+	return nil
+}

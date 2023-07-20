@@ -31,8 +31,8 @@ type CardRequest struct {
 }
 
 type CardRepository interface {
-	CreateCard(request CardRequest, uid string) (*Response, error)
+	CreateCard(request CardRequest, uid string, state_id string) (*Response, error)
 	GetCards(uid string) (*Response, error)
 	GetCardByID(id string, uid string) (*Response, error)
-	DeleteCard(id string)
+	DeleteCard(id string, uid string) error
 }

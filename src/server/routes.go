@@ -32,6 +32,7 @@ func RegisterStateRoutes(router *gin.Engine, stateRepo *repositories.StateRepo, 
 	h := &Controllers{
 		stateController: controllers.InitStateController(stateRepo),
 	}
+
 	routes := router.Group("/states")
 	routes.Use(middlewares.AuthJWTMiddleware(conf))
 	routes.POST("", h.stateController.CreateState)
@@ -45,7 +46,10 @@ func RegisterCardRoutes(router *gin.Engine, cardRepo *repositories.CardRepo, con
 	h := &Controllers{
 		cardController: controllers.InitCardController(cardRepo),
 	}
+
 	routes := router.Group("/cards")
 	routes.Use(middlewares.AuthJWTMiddleware(conf))
 	routes.POST("", h.cardController.CreateCard)
+	routes.GET("", h.cardController.GetCards)
+	routes.GET("/:id", h.cardController.GetCard)
 }

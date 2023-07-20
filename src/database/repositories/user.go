@@ -49,7 +49,7 @@ func (repo *UserRepo) CreateUser(request models.RegisterRequest) (*models.Respon
 	response.Data = data
 	response.Message = "User Created successfully"
 
-	return &response, err
+	return &response, nil
 }
 
 func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (*models.Response, error) {

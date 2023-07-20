@@ -32,6 +32,7 @@ type StateRepository interface {
 	CreateState(request StateCreateRequest) (*Response, error)
 	GetStates() (*Response, error)
 	GetStateByID(id string) (*Response, error)
+	GetState(id string) (*State, error)
 	UpdateState(request StateUpdateRequest, id string) (*Response, error)
 	DeleteState(id string) error
 }
