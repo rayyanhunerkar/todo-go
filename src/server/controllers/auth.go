@@ -21,6 +21,15 @@ func InitUserController(userRepo *repositories.UserRepo, conf *viper.Viper) *Use
 	}
 }
 
+// Register godoc
+// @Summary Register
+// @Description Register a new User
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param login body models.RegisterRequest true "RegisterRequest"
+// @Success 200 {object} models.Response
+// @Router /auth/signup [post]
 func (h *UserController) Register(context *gin.Context) {
 	var request models.RegisterRequest
 
@@ -38,6 +47,15 @@ func (h *UserController) Register(context *gin.Context) {
 	context.JSON(http.StatusCreated, &user)
 }
 
+// Login godoc
+// @Summary Login
+// @Description Login
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param login body models.LoginRequest true "LoginRequest"
+// @Success 200 {object} models.Response
+// @Router /auth/login [post]
 func (h *UserController) Login(context *gin.Context) {
 	var request models.LoginRequest
 

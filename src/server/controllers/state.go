@@ -18,6 +18,16 @@ func InitStateController(stateRepo *repositories.StateRepo) *StateController {
 	}
 }
 
+// States godoc
+// @Summary Create State
+// @Security Bearer
+// @Description Create a new state
+// @Tags State
+// @Accept json
+// @Produce json
+// @Param state body models.StateCreateRequest true "StateRequest"
+// @Success 201 {object} models.Response
+// @Router /states [post]
 func (h *StateController) CreateState(context *gin.Context) {
 
 	var request models.StateCreateRequest
@@ -33,6 +43,15 @@ func (h *StateController) CreateState(context *gin.Context) {
 	context.JSON(http.StatusCreated, &state)
 }
 
+// States godoc
+// @Summary Create State
+// @Security Bearer
+// @Description Create a new state
+// @Tags State
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Response
+// @Router /states [get]
 func (h *StateController) GetStates(context *gin.Context) {
 	states, err := h.service.GetStates()
 	if err != nil {
@@ -42,6 +61,16 @@ func (h *StateController) GetStates(context *gin.Context) {
 	context.JSON(http.StatusOK, &states)
 }
 
+// States godoc
+// @Summary Create State
+// @Security Bearer
+// @Description Create a new state
+// @Tags State
+// @Accept json
+// @Produce json
+// @Param id path string true "fetch by id"
+// @Success 200 {object} models.Response
+// @Router /states/{id} [post]
 func (h *StateController) GetStateByID(context *gin.Context) {
 	params := context.Param("id")
 	state, err := h.service.GetStateByID(params)
@@ -51,6 +80,17 @@ func (h *StateController) GetStateByID(context *gin.Context) {
 	context.JSON(http.StatusOK, state)
 }
 
+// States godoc
+// @Summary Create State
+// @Security Bearer
+// @Description Create a new state
+// @Tags State
+// @Accept json
+// @Produce json
+// @Param id path string true "fetch by id"
+// @Param state body models.StateUpdateRequest true "StateRequest"
+// @Success 200 {object} models.Response
+// @Router /states/{id} [patch]
 func (h *StateController) UpdateState(context *gin.Context) {
 	var request models.StateUpdateRequest
 	id := context.Param("id")
@@ -65,6 +105,16 @@ func (h *StateController) UpdateState(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
+// States godoc
+// @Summary Create State
+// @Security Bearer
+// @Description Create a new state
+// @Tags State
+// @Accept json
+// @Produce json
+// @Param id path string true "fetch by id"
+// @Success 204
+// @Router /states/{id} [delete]
 func (h *StateController) DeleteState(context *gin.Context) {
 	id := context.Param("id")
 	err := h.service.DeleteState(id)

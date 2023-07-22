@@ -18,6 +18,16 @@ func InitCardController(cardRepo *repositories.CardRepo) *CardController {
 	}
 }
 
+// Cards godoc
+// @Summary CreateCard
+// @Security Bearer
+// @Description Create a new task
+// @Tags Cards
+// @Accept json
+// @Produce json
+// @Param card body models.CardRequest true "CardRequest"
+// @Success 201 {object} models.Response
+// @Router /cards [post]
 func (h *CardController) CreateCard(context *gin.Context) {
 	var request models.CardRequest
 
@@ -34,6 +44,15 @@ func (h *CardController) CreateCard(context *gin.Context) {
 	context.JSON(http.StatusCreated, response)
 }
 
+// Cards godoc
+// @Summary FetchCards
+// @Security Bearer
+// @Description Create a new task
+// @Tags Cards
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Response
+// @Router /cards [get]
 func (h *CardController) GetCards(context *gin.Context) {
 
 	response, err := h.service.GetCards(context.GetString("currentUser"))
@@ -45,6 +64,16 @@ func (h *CardController) GetCards(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
+// Cards godoc
+// @Summary FetchCards
+// @Security Bearer
+// @Description Create a new task
+// @Tags Cards
+// @Accept json
+// @Produce json
+// @Param id path string true "fetch by ID"
+// @Success 200 {object} models.Response
+// @Router /cards/{id} [get]
 func (h *CardController) GetCard(context *gin.Context) {
 	id := context.Param("id")
 	response, err := h.service.GetCardByID(id, context.GetString("currentUser"))
@@ -55,6 +84,16 @@ func (h *CardController) GetCard(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
+// Cards godoc
+// @Summary FetchCards
+// @Security Bearer
+// @Description Create a new task
+// @Tags Cards
+// @Accept json
+// @Produce json
+// @Param id path string true "fetch by ID"
+// @Success 204
+// @Router /cards/{id} [delete]
 func (h *CardController) DeleteCard(context *gin.Context) {
 	id := context.Param("id")
 	err := h.service.DeleteCard(id, context.GetString("currentUser"))
