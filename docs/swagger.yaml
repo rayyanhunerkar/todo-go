@@ -122,6 +122,21 @@ paths:
       summary: Login
       tags:
       - Auth
+  /auth/me:
+    get:
+      description: Gets current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - Bearer: []
+      summary: Me
+      tags:
+      - Auth
   /auth/signup:
     post:
       consumes:

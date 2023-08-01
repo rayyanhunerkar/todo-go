@@ -24,6 +24,7 @@ func RegisterAuthRoutes(router *gin.Engine, userRepo *repositories.UserRepo, con
 	routes := router.Group("/auth")
 	routes.POST("/signup", h.userController.Register)
 	routes.POST("/login", h.userController.Login)
+	routes.GET("/me", h.userController.Me).Use(middlewares.AuthJWTMiddleware(conf))
 
 }
 
