@@ -22,9 +22,19 @@ func RegisterAuthRoutes(router *gin.Engine, userRepo *repositories.UserRepo, con
 	}
 
 	routes := router.Group("/auth")
+	routes.Use(middlewares.CORSMiddleware())
 	routes.POST("/signup", h.userController.Register)
 	routes.POST("/login", h.userController.Login)
-	routes.GET("/me", h.userController.Me).Use(middlewares.AuthJWTMiddleware(conf))
+}
+
+func RegisterUserRoutes(router *gin.Engine, userRepo *repositories.UserRepo, conf *viper.Viper) {
+	h := &Controllers{
+		userController: controllers.InitUserController(userRepo, conf),
+	}
+	routes := router.Group("/user")
+	routes.Use(middlewares.CORSMiddleware())
+	routes.Use(middlewares.AuthJWTMiddleware(conf))
+	routes.GET("/me", h.userController.Me)
 
 }
 
@@ -35,6 +45,7 @@ func RegisterStateRoutes(router *gin.Engine, stateRepo *repositories.StateRepo, 
 	}
 
 	routes := router.Group("/states")
+	routes.Use(middlewares.CORSMiddleware())
 	routes.Use(middlewares.AuthJWTMiddleware(conf))
 	routes.POST("", h.stateController.CreateState)
 	routes.GET("", h.stateController.GetStates)
@@ -49,6 +60,7 @@ func RegisterCardRoutes(router *gin.Engine, cardRepo *repositories.CardRepo, con
 	}
 
 	routes := router.Group("/cards")
+	routes.Use(middlewares.CORSMiddleware())
 	routes.Use(middlewares.AuthJWTMiddleware(conf))
 	routes.POST("", h.cardController.CreateCard)
 	routes.GET("", h.cardController.GetCards)

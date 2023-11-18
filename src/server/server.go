@@ -19,6 +19,7 @@ func Serve(db *gorm.DB, conf *viper.Viper) {
 	RegisterAuthRoutes(router, repos.UserRepo, conf)
 	RegisterStateRoutes(router, repos.StateRepo, conf)
 	RegisterCardRoutes(router, repos.CardRepo, conf)
+	RegisterUserRoutes(router, repos.UserRepo, conf)
 	router.Run()
 }
 

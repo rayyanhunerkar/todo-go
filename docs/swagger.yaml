@@ -122,21 +122,6 @@ paths:
       summary: Login
       tags:
       - Auth
-  /auth/me:
-    get:
-      description: Gets current user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Response'
-      security:
-      - Bearer: []
-      summary: Me
-      tags:
-      - Auth
   /auth/signup:
     post:
       consumes:
@@ -353,6 +338,21 @@ paths:
       summary: Create State
       tags:
       - State
+  /user/me:
+    get:
+      description: Gets current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - Bearer: []
+      summary: Me
+      tags:
+      - User
 securityDefinitions:
   Bearer:
     description: Type "Bearer" followed by a space and JWT token.

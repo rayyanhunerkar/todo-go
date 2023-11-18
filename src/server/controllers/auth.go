@@ -75,21 +75,27 @@ func (h *UserController) Login(context *gin.Context) {
 // Me godoc
 // @Summary Me
 // @Description Gets current user
-// @Tags Auth
+// @Tags User
 // @Security Bearer
 // @Produce json
 // @Success 200 {object} models.Response
-// @Router /auth/me [get]
+// @Router /user/me [get]
 func (h *UserController) Me(context *gin.Context) {
 
 	var response models.Response
+	var userResponse models.MeResponse
+
 	user, err := h.service.GetUserByID(string(context.GetString("currentUser")))
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, "Wrong Username/Password")
 		panic(err)
 	}
+	userResponse.ID = user.ID
+	userResponse.Username = user.Username
+	userResponse.FirstName = user.FirstName
+	userResponse.LastName = user.LastName
 
-	response.Data = user
+	response.Data = userResponse
 	response.Message = "User Fetched Successfully"
 
 	context.JSON(http.StatusOK, response)

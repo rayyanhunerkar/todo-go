@@ -46,6 +46,13 @@ type LoginResponse struct {
 	Username    string    `json:"username"`
 }
 
+type MeResponse struct {
+	ID        uuid.UUID `json:"id"`
+	Username  string    `json:"username"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+}
+
 type UserRepository interface {
 	CreateUser(user RegisterRequest) (*Response, error)
 	Login(request LoginRequest, conf *viper.Viper) (*Response, error)
