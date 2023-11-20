@@ -9,4 +9,4 @@ FROM golang:alpine as app
 WORKDIR /app
 COPY --from=builder /app/build/todo-go .
 EXPOSE 8080
-CMD [ "todo-go" ]
+CMD [ "./todo-go" ]

@@ -55,6 +55,6 @@ type MeResponse struct {
 
 type UserRepository interface {
 	CreateUser(user RegisterRequest) (*Response, error)
-	Login(request LoginRequest, conf *viper.Viper) (*Response, error)
+	Login(request LoginRequest, conf *viper.Viper) (*Response, ErrorResponse)
 	GetUserByID(id string) (*User, error)
 }

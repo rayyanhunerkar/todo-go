@@ -65,9 +65,9 @@ func (h *UserController) Login(context *gin.Context) {
 	}
 
 	token, err := h.service.Login(request, h.conf)
-	if err != nil {
-		context.AbortWithStatusJSON(http.StatusUnauthorized, "Wrong Username/Password")
-		panic(err)
+	if err.Message != "" {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, err)
+		return
 	}
 	context.JSON(http.StatusOK, token)
 }
@@ -85,7 +85,7 @@ func (h *UserController) Me(context *gin.Context) {
 	var response models.Response
 	var userResponse models.MeResponse
 
-	user, err := h.service.GetUserByID(string(context.GetString("currentUser")))
+	user, err := h.service.GetUserByID(string(context.GetString("currentUserId")))
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, "Wrong Username/Password")
 		panic(err)

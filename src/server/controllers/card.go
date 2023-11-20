@@ -36,7 +36,7 @@ func (h *CardController) CreateCard(context *gin.Context) {
 		return
 	}
 
-	response, err := h.service.CreateCard(request, context.GetString("currentUser"), "id")
+	response, err := h.service.CreateCard(request, context.GetString("currentUserId"), "id")
 	if err != nil {
 		context.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -55,7 +55,7 @@ func (h *CardController) CreateCard(context *gin.Context) {
 // @Router /cards [get]
 func (h *CardController) GetCards(context *gin.Context) {
 
-	response, err := h.service.GetCards(context.GetString("currentUser"))
+	response, err := h.service.GetCards(context.GetString("currentUserId"))
 	if err != nil {
 		context.AbortWithError(http.StatusNotFound, err)
 		return
@@ -76,7 +76,7 @@ func (h *CardController) GetCards(context *gin.Context) {
 // @Router /cards/{id} [get]
 func (h *CardController) GetCard(context *gin.Context) {
 	id := context.Param("id")
-	response, err := h.service.GetCardByID(id, context.GetString("currentUser"))
+	response, err := h.service.GetCardByID(id, context.GetString("currentUserId"))
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusNotFound, err)
 	}
@@ -96,7 +96,7 @@ func (h *CardController) GetCard(context *gin.Context) {
 // @Router /cards/{id} [delete]
 func (h *CardController) DeleteCard(context *gin.Context) {
 	id := context.Param("id")
-	err := h.service.DeleteCard(id, context.GetString("currentUser"))
+	err := h.service.DeleteCard(id, context.GetString("currentUserId"))
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusNotFound, err)
 	}

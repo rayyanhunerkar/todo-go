@@ -52,19 +52,22 @@ func (repo *UserRepo) CreateUser(request models.RegisterRequest) (*models.Respon
 	return &response, nil
 }
 
-func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (*models.Response, error) {
+func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (*models.Response, models.ErrorResponse) {
 	var data models.LoginResponse
 	var response models.Response
+	var errorResponse models.ErrorResponse
 
 	jwtConf := jwt.InitJWTConf(conf)
 
-	result, err := repo.GetUserByName(request.Username)
+	result, err := repo.GetUserByEmail(request.Username)
 	if err != nil {
-		return nil, err
+		errorResponse.Message = "Wrong Username/Password"
+		return nil, errorResponse
 	}
 	err = utils.VerifyPassword(result.Password, request.Password)
 	if err != nil {
-		return nil, err
+		errorResponse.Message = "Wrong Username/Password"
+		return nil, errorResponse
 	}
 	token, err := jwt.JWTService.GenerateToken(jwtConf, *result)
 	if err != nil {
@@ -77,7 +80,7 @@ func (repo *UserRepo) Login(request models.LoginRequest, conf *viper.Viper) (*mo
 
 	response.Data = data
 	response.Message = "User Logged in successfully"
-	return &response, nil
+	return &response, errorResponse
 }
 
 func (repo *UserRepo) GetUserByID(id string) (*models.User, error) {
@@ -88,7 +91,7 @@ func (repo *UserRepo) GetUserByID(id string) (*models.User, error) {
 	return &u, nil
 }
 
-func (repo *UserRepo) GetUserByName(username string) (*models.User, error) {
+func (repo *UserRepo) GetUserByEmail(username string) (*models.User, error) {
 	var u models.User
 	if result := repo.db.Where("username = ?", username).First(&u); result.Error != nil {
 		return nil, result.Error

@@ -18,9 +18,11 @@ func AuthJWTMiddleware(conf *viper.Viper) gin.HandlerFunc {
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			id := claims["id"]
 			ctx.Set(
-				"currentUser", id,
+				"currentUserId", claims["id"],
+			)
+			ctx.Set(
+				"currentUserName", claims["username"],
 			)
 			ctx.Next()
 		} else {

@@ -16,15 +16,16 @@ func Serve(db *gorm.DB, conf *viper.Viper) {
 	router := gin.Default()
 	initSwagger(router)
 	router.Use(middlewares.CORSMiddleware())
-	RegisterAuthRoutes(router, repos.UserRepo, conf)
+	RegisterPublicAuthRoutes(router, repos.UserRepo, conf)
 	RegisterStateRoutes(router, repos.StateRepo, conf)
 	RegisterCardRoutes(router, repos.CardRepo, conf)
 	RegisterUserRoutes(router, repos.UserRepo, conf)
-	router.Run()
+	router.Run("0.0.0.0:8000")
 }
 
 func initSwagger(router *gin.Engine) {
-	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json")
-	docs.SwaggerInfo.BasePath = ""
+	docs.SwaggerInfo.Title = "Todo"
+	docs.SwaggerInfo.Version = "v1"
+	url := ginSwagger.URL("http://0.0.0.0:8000/swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 }

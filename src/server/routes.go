@@ -5,7 +5,6 @@ import (
 	"github.com/rayyanhunerkar/todo-go/src/database/repositories"
 	"github.com/rayyanhunerkar/todo-go/src/middlewares"
 	"github.com/rayyanhunerkar/todo-go/src/server/controllers"
-
 	"github.com/spf13/viper"
 )
 
@@ -15,7 +14,7 @@ type Controllers struct {
 	cardController  *controllers.CardController
 }
 
-func RegisterAuthRoutes(router *gin.Engine, userRepo *repositories.UserRepo, conf *viper.Viper) {
+func RegisterPublicAuthRoutes(router *gin.Engine, userRepo *repositories.UserRepo, conf *viper.Viper) {
 
 	h := &Controllers{
 		userController: controllers.InitUserController(userRepo, conf),
