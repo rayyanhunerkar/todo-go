@@ -29,7 +29,6 @@ func InitJWTConf(conf *viper.Viper) *JWTConf {
 
 func (conf *JWTConf) GenerateToken(user models.User) (string, error) {
 	secret := conf.conf.GetString("jwt.secret")
-	println([]byte(secret))
 	claims := jwt.MapClaims{}
 	claims["username"] = user.Username
 	claims["id"] = user.ID

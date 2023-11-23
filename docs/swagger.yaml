@@ -2,13 +2,13 @@ definitions:
   models.CardRequest:
     properties:
       assigned_to:
-        $ref: '#/definitions/models.User'
+        type: string
       deadline:
         type: string
       description:
         type: string
       state_id:
-        $ref: '#/definitions/models.State'
+        type: string
       title:
         type: string
     required:
@@ -49,19 +49,6 @@ definitions:
       message:
         type: string
     type: object
-  models.State:
-    properties:
-      created_at:
-        type: string
-      description:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      updated_at:
-        type: string
-    type: object
   models.StateCreateRequest:
     properties:
       description:
@@ -79,23 +66,6 @@ definitions:
         type: string
     required:
     - name
-    type: object
-  models.User:
-    properties:
-      created_at:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: string
-      last_name:
-        type: string
-      password:
-        type: string
-      updated_at:
-        type: string
-      username:
-        type: string
     type: object
 info:
   contact: {}
@@ -225,6 +195,28 @@ paths:
       security:
       - Bearer: []
       summary: FetchCards
+      tags:
+      - Cards
+    patch:
+      consumes:
+      - application/json
+      description: Update a task
+      parameters:
+      - description: Update by ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - Bearer: []
+      summary: UpdateCard
       tags:
       - Cards
   /states:

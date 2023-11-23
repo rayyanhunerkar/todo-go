@@ -36,7 +36,7 @@ func (h *CardController) CreateCard(context *gin.Context) {
 		return
 	}
 
-	response, err := h.service.CreateCard(request, context.GetString("currentUserId"), "id")
+	response, err := h.service.CreateCard(request, context.GetString("currentUserId"))
 	if err != nil {
 		context.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -101,4 +101,24 @@ func (h *CardController) DeleteCard(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusNotFound, err)
 	}
 	context.JSON(http.StatusNoContent, nil)
+}
+
+// Cards godoc
+// @Summary UpdateCard
+// @Security Bearer
+// @Description Update a task
+// @Tags Cards
+// @Accept json
+// @Produce json
+// @Param id path string true "Update by ID"
+// @Success 200 {object} models.Response
+// @Router /cards/{id} [patch]
+func (h *CardController) UpdateCard(context *gin.Context) {
+	var request models.UpdateCardRequest
+	id := context.Param("id")
+	response, err := h.service.UpdateCard(request, id, context.GetString("currentUserId"))
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusNotFound, err)
+	}
+	context.JSON(http.StatusAccepted, response)
 }

@@ -26,13 +26,22 @@ type CardRequest struct {
 	Title       string    `json:"title" binding:"required"`
 	Description string    `json:"description" binding:"required"`
 	Deadline    time.Time `json:"deadline" binding:"required"`
-	State       State     `json:"state_id" binding:"required"`
-	AssignedTo  User      `json:"assigned_to" binding:"-"`
+	State       string    `json:"state_id" binding:"required"`
+	AssignedTo  string    `json:"assigned_to" binding:"-"`
+}
+
+type UpdateCardRequest struct {
+	Title       string    `json:"title" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Deadline    time.Time `json:"deadline" binding:"required"`
+	State       string    `json:"state_id" binding:"required"`
+	AssignedTo  string    `json:"assigned_to" binding:"-"`
 }
 
 type CardRepository interface {
-	CreateCard(request CardRequest, uid string, state_id string) (*Response, error)
+	CreateCard(request CardRequest, uid string) (*Response, error)
 	GetCards(uid string) (*Response, error)
 	GetCardByID(id string, uid string) (*Response, error)
 	DeleteCard(id string, uid string) error
+	UpdateCard(request UpdateCardRequest, id string, uid string) (*Response, error)
 }

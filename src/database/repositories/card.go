@@ -15,17 +15,21 @@ func InitCardRepo(db *gorm.DB) *CardRepo {
 	}
 }
 
-func (repo *CardRepo) CreateCard(request models.CardRequest, uid string, state_id string) (*models.Response, error) {
+func (repo *CardRepo) CreateCard(request models.CardRequest, uid string) (*models.Response, error) {
 	var card models.Card
 	var data models.Response
-	// var state models.State
 
 	user, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
 	if err != nil {
 		return nil, err
 	}
 
-	state, err := models.StateRepository.GetState(InitStateRepo(repo.db), state_id)
+	state, err := models.StateRepository.GetState(InitStateRepo(repo.db), request.State)
+	if err != nil {
+		return nil, err
+	}
+
+	assignedUser, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
 	if err != nil {
 		return nil, err
 	}
@@ -35,6 +39,7 @@ func (repo *CardRepo) CreateCard(request models.CardRequest, uid string, state_i
 	card.Deadline = request.Deadline
 	card.User = *user
 	card.State = *state
+	card.AssignedTo = *assignedUser
 
 	data.Data = &card
 	data.Message = "Card created successfully"
@@ -93,4 +98,41 @@ func (repo *CardRepo) DeleteCard(id string, uid string) error {
 	}
 
 	return nil
+}
+
+func (repo *CardRepo) UpdateCard(request models.UpdateCardRequest, id string, uid string) (*models.Response, error) {
+
+	var card models.Card
+	var data models.Response
+
+	user, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), uid)
+	if err != nil {
+		return nil, err
+	}
+
+	state, err := models.StateRepository.GetState(InitStateRepo(repo.db), request.State)
+	if err != nil {
+		return nil, err
+	}
+
+	assignedUser, err := models.UserRepository.GetUserByID(InitUserRepo(repo.db), request.AssignedTo)
+	if err != nil {
+		return nil, err
+	}
+
+	if result := repo.db.Find(&card).Where("user_id = ?", user.ID).Where("id = ?", id).First(&card); result.Error != nil {
+		return nil, err
+	}
+
+	card.Title = request.Title
+	card.Description = request.Description
+	card.State = *state
+	card.AssignedTo = *assignedUser
+
+	repo.db.Save(&card)
+
+	data.Data = &card
+	data.Message = "Task Updated Successfully"
+
+	return &data, nil
 }

@@ -100,3 +100,6 @@ func (h *UserController) Me(context *gin.Context) {
 
 	context.JSON(http.StatusOK, response)
 }
+
+// TODO: Create an API to update user profile
+func (h *UserController) UpdateUser(context *gin.Context) {}

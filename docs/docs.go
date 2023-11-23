@@ -216,6 +216,41 @@ const docTemplate = `{
                         "description": "No Content"
                     }
                 }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update a task",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cards"
+                ],
+                "summary": "UpdateCard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Update by ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
             }
         },
         "/states": {
@@ -433,7 +468,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "assigned_to": {
-                    "$ref": "#/definitions/models.User"
+                    "type": "string"
                 },
                 "deadline": {
                     "type": "string"
@@ -442,7 +477,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "state_id": {
-                    "$ref": "#/definitions/models.State"
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"
@@ -496,26 +531,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.State": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
         "models.StateCreateRequest": {
             "type": "object",
             "required": [
@@ -540,32 +555,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }

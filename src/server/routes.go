@@ -64,4 +64,6 @@ func RegisterCardRoutes(router *gin.Engine, cardRepo *repositories.CardRepo, con
 	routes.POST("", h.cardController.CreateCard)
 	routes.GET("", h.cardController.GetCards)
 	routes.GET("/:id", h.cardController.GetCard)
+	routes.PATCH("/:id", h.cardController.UpdateCard)
+	routes.DELETE("/:id", h.cardController.DeleteCard)
 }
